@@ -110,3 +110,50 @@ a:hover {
   margin-left: 20px;
   font-size: 1.2rem;
 }
+
+/* Estilos para formularios */
+form input {
+  font-size: 1.1rem;
+  padding: 8px 12px;
+  margin: 8px 0;
+  width: 100%;
+  max-width: 300px;
+  display: block;
+}
+
+form button {
+  padding: 10px 18px;
+  font-size: 1rem;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+/* Centrado y espaciado básico para las vistas */
+body {
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-radius: 10px;
+}
+
+/* Botones generales */
+button {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Estilo para pre de usuario */
+#userInfo {
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #ccc;
+  white-space: pre-wrap;
+}

@@ -64,3 +64,18 @@ router.get("/cart/:cid", async (req, res) => {
     processServerError(res, error);
   }
 });
+
+//router.get("/session", async (req, res) => {});
+
+router.get("/register", (req, res) => {
+  res.render("register", { title: "Registro" });
+});
+
+router.get("/login", (req, res) => {
+  res.render("login", { title: "Iniciar Sesión" });
+});
+
+router.get("/session", (req, res) => {
+  res.render("session", { title: "Datos del Usuario" });
+});
+
