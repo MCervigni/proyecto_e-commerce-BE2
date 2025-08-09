@@ -131,7 +131,7 @@ form button {
 /* Centrado y espaciado básico para las vistas */
 body {
   font-family: Arial, sans-serif;
-  max-width: 600px;
+  /* max-width: 600px; */
   margin: 40px auto;
   padding: 20px;
   background-color: #f7f7f7;

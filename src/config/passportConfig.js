@@ -2,7 +2,7 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import bcrypt from "bcrypt";
-import { UserManagerMongoDB as UserManager } from "../dao/userManagerMongoDB.js";
+import { UserManagerMongoDB as UserManager } from "../dao/UserManagerMongoDB.js";
 import { config } from "../config/config.js";
 
 // Extrae JWT desde cookies
@@ -22,10 +22,11 @@ export const initializePassport = () => {
       },
       async (req, email, password, done) => {
         try {
-          const { first_name, last_name, age } = req.body;
+          const { first_name, last_name, age, role } = req.body;
           if (!first_name || !last_name || age === undefined) {
             return done(null, false, {
-              message: "Todos los campos son obligatorios",
+              message:
+                "Todos los campos: NOMBRE | APELLIDO | EDAD | EMAIL | PASSWORD son obligatorios",
             });
           }
           if (!password || password.length < 6) {
@@ -46,6 +47,7 @@ export const initializePassport = () => {
             email,
             age,
             password: hashedPassword,
+            role: role || "user",
           });
           return done(null, newUser);
         } catch (error) {

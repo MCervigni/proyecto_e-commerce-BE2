@@ -1,8 +1,8 @@
 import { Cart } from "./models/cartsModel.js";
 
 export class CartManagerMongoDB {
-  // Método para obtener todos los carritos
-  static async getCarts() {
+  // Obtener todos los carritos
+  static async getAll() {
     try {
       return await Cart.find().lean();
     } catch (error) {
@@ -10,19 +10,19 @@ export class CartManagerMongoDB {
     }
   }
 
-  // Método para obtener un carrito por ID
-  static async getCartById(id) {
+  // Obtener un carrito por ID
+  static async getById(id) {
     try {
-      return await Cart.findById(id).populate(`products.product`).lean();
+      return await Cart.findById(id); // .populate("products.product");
     } catch (error) {
-      throw new Error("Error al buscar el carrito: " + error.message);
+      throw new Error("Error al obtener el carrito: " + error.message);
     }
   }
 
-  // Método para crear un nuevo carrito
-  static async createCart() {
+  // Crear un carrito
+  static async create(cartData) {
     try {
-      const newCart = new Cart();
+      const newCart = new Cart(cartData);
       await newCart.save();
       return newCart;
     } catch (error) {
@@ -30,89 +30,21 @@ export class CartManagerMongoDB {
     }
   }
 
-  // Método para agregar un producto al carrito
-  static async addProductToCart(cartId, productId) {
+  // Actualizar un carrito por ID
+  static async update(id, updates) {
     try {
-      const cart = await Cart.findById(cartId);
-      const productInCart = cart.products.find(
-        (p) => p.product.toString() === productId
-      );
-      if (productInCart) {
-        productInCart.quantity += 1;
-      } else {
-        cart.products.push({ product: productId, quantity: 1 });
-      }
-
-      await cart.save();
-      return cart;
-    } catch (error) {
-      throw new Error(
-        "Error al agregar el producto al carrito: " + error.message
-      );
-    }
-  }
-
-  // Método para eliminar un producto del carrito
-  static async removeProductFromCart(cartId, productId) {
-    try {
-      const cart = await Cart.findByIdAndDelete;
-      cart.products = cart.products.filter(
-        (p) => p.product.toString() !== productId
-      );
-      await cart.save();
-      return cart;
-    } catch (error) {
-      throw new Error(
-        "Error al eliminar el producto del carrito: " + error.message
-      );
-    }
-  }
-
-  // Método para actualizar el carrito con un arreglo de productos
-  static async updateCart(cartId, products) {
-    try {
-      const updatedCart = await Cart.findByIdAndUpdate(
-        cartId,
-        { products },
-        { new: true, runValidators: true }
-      ).lean();
-      return updatedCart;
+      return await Cart.findByIdAndUpdate(id, updates, { new: true, runValidators: true }).lean();
     } catch (error) {
       throw new Error("Error al actualizar el carrito: " + error.message);
     }
   }
 
-  // Método para actualizar la cantidad de un producto en el carrito
-  static async updateProductQuantity(cartId, productId, quantity) {
+  // Eliminar un carrito por ID
+  static async delete(id) {
     try {
-      const cart = await Cart.findById(cartId);
-      const productInCart = cart.products.find(
-        (p) => p.product.toString() === productId
-      );
-
-      productInCart.quantity = quantity;
-      await cart.save();
-      return cart;
+      return await Cart.findByIdAndDelete(id).lean();
     } catch (error) {
-      throw new Error(
-        "Error al actualizar la cantidad del producto en el carrito: " +
-          error.message
-      );
-    }
-  }
-
-  // Método para eliminar todos los productos del carrito
-  static async clearCart(cartId) {
-    try {
-      const cart = await Cart.findById(cartId);
-
-      cart.products = [];
-      await cart.save();
-      return cart;
-    } catch (error) {
-      throw new Error(
-        "Error al eliminar todos los productos del carrito: " + error.message
-      );
+      throw new Error("Error al eliminar el carrito: " + error.message);
     }
   }
 }

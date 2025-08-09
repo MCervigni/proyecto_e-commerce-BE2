@@ -4,7 +4,7 @@ import { router as viewsRouter } from "./routes/views.router.js";
 import { router as productsRouter } from "./routes/products.router.js";
 import { router as cartsRouter } from "./routes/carts.router.js";
 import { router as sessionsRouter } from "./routes/sessions.router.js";
-import { connectDB } from "./connDB.js";
+import { connectDB } from "./config/connDB.js";
 import { config } from "./config/config.js";
 import { initializePassport } from "./config/passportConfig.js";
 import passport from "passport";

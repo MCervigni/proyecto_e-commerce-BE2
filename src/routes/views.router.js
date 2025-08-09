@@ -1,46 +1,15 @@
 import { Router } from "express";
-import { ProductManagerMongoDB as ProductManager } from "../dao/productManagerMongoDB.js";
-import { CartManagerMongoDB as CartManager } from "../dao/cartManagerMongoDB.js";
+import { productsService } from "../repository/ProductsRepository.js";
+import { CartManagerMongoDB as CartManager } from "../dao/CartManagerMongoDB.js";
 import { processServerError } from "../utils.js";
+import { isValidObjectId } from "mongoose";
 
 export const router = Router();
 
 router.get("/products", async (req, res) => {
   try {
-    let { limit = 10, sort, query, page = 1 } = req.query;
-
-    limit = Number(limit);
-    page = Number(page);
-
-    const filter = query
-      ? { $or: [{ category: query }, { status: query }] }
-      : {};
-
-    const options = {
-      limit,
-      page,
-      sort: sort ? { price: sort === "asc" ? 1 : -1 } : {},
-      lean: true,
-    };
-
-    let {
-      docs: products,
-      totalPages,
-      hasPrevPage,
-      prevPage,
-      hasNextPage,
-      nextPage,
-    } = await ProductManager.getProducts(filter, options);
-
-    res.render("home", {
-      title: "Home",
-      products,
-      totalPages,
-      hasPrevPage,
-      prevPage,
-      hasNextPage,
-      nextPage,
-    });
+    const products = await productsService.getProducts();
+    res.render("home", { products });
   } catch (error) {
     processServerError(res, error);
   }
@@ -48,6 +17,10 @@ router.get("/products", async (req, res) => {
 
 router.get("/cart/:cid", async (req, res) => {
   const { cid } = req.params;
+
+  if (!isValidObjectId(cid)) {
+    return res.status(400).json({ error: `El ID ingresado no es válido` });
+  }
 
   try {
     const cart = await CartManager.getCartById(cid);
@@ -65,8 +38,6 @@ router.get("/cart/:cid", async (req, res) => {
   }
 });
 
-//router.get("/session", async (req, res) => {});
-
 router.get("/register", (req, res) => {
   res.render("register", { title: "Registro" });
 });
@@ -78,4 +49,3 @@ router.get("/login", (req, res) => {
 router.get("/session", (req, res) => {
   res.render("session", { title: "Datos del Usuario" });
 });
-

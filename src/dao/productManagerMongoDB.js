@@ -1,16 +1,17 @@
 import { Product } from "./models/productsModel.js";
 
 export class ProductManagerMongoDB {
-    static async getProducts(filter = {}, options = {}) {
-      try {
-        return await Product.paginate(filter, options);
-      } catch (error) {
-        throw new Error("Error al leer los productos: " + error.message);
-      }
+  // Obtener todos los productos
+  static async getAll() {
+    try {
+      return await Product.find().lean();
+    } catch (error) {
+      throw new Error("Error al leer los productos: " + error.message);
     }
+  }
 
-  // Método para obtener un producto por ID
-  static async getProductById(id) {
+  // Obtener un producto por ID
+  static async getById(id) {
     try {
       return await Product.findById(id).lean();
     } catch (error) {
@@ -18,8 +19,8 @@ export class ProductManagerMongoDB {
     }
   }
 
-  // Método para agregar un producto
-  static async addProduct(product) {
+  // Crear un producto
+  static async create(product) {
     try {
       const newProduct = await Product.create(product);
       return newProduct.toJSON();
@@ -28,8 +29,8 @@ export class ProductManagerMongoDB {
     }
   }
 
-  // Método para modificar un producto
-  static async updateProduct(id, updates) {
+  // Actualizar un producto
+  static async update(id, updates) {
     try {
       return await Product.findByIdAndUpdate(id, updates, { new: true }).lean();
     } catch (error) {
@@ -37,21 +38,12 @@ export class ProductManagerMongoDB {
     }
   }
 
-  // Método para eliminar un producto
-  static async deleteProduct(id) {
+  // Eliminar un producto
+  static async delete(id) {
     try {
       return await Product.findByIdAndDelete(id).lean();
     } catch (error) {
       throw new Error("Error al eliminar el producto: " + error.message);
-    }
-  }
-
-  // Método para cargar los productos en DB
-  static async insertMany(products = []) {
-    try {
-      return await Product.insertMany(products);
-    } catch (error) {
-      throw new Error("Error al cargar los productos: " + error.message);
     }
   }
 }
