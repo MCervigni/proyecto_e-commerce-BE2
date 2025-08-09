@@ -24,19 +24,19 @@ router.get("/", authenticate, authorize("user"),getCarts);
 router.get("/:cid", authenticate, authorize("user"),getCartById);
 
 // Ruta para agregar un producto al carrito
-router.post("/:cid/product/:pid", authenticate, authorize("user"), addProductToCart);
+router.post("/:cid/product/:pid", authenticate, authorize("user"), isCartOwner, addProductToCart);
 
 // Ruta para eliminar un producto del carrito
-router.delete("/:cid/product/:pid", authenticate, authorize("user"), removeProductFromCart);
+router.delete("/:cid/product/:pid", authenticate, authorize("user"), isCartOwner, removeProductFromCart);
 
 // Ruta para actualizar el carrito con un arreglo de productos
-router.put("/:cid", authenticate, authorize("user"), updateCart);
+router.put("/:cid", authenticate, authorize("user"), isCartOwner, updateCart);
 
 // Ruta para actualizar la cantidad de un producto en el carrito
-router.put("/:cid/product/:pid", authenticate, authorize("user"), updateProductQuantity);
+router.put("/:cid/product/:pid", authenticate, authorize("user"), isCartOwner, updateProductQuantity);
 
 // Ruta para eliminar todos los productos del carrito
-router.delete("/:cid", authenticate, authorize("user"), clearCart);
+router.delete("/:cid", authenticate, authorize("user"), isCartOwner, clearCart);
 
 //Ruta para comprar un carrito
 router.post("/:cid/purchase", authenticate, authorize("user"), isCartOwner,purchaseCart);

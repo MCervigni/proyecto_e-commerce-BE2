@@ -29,6 +29,11 @@ export const initializePassport = () => {
                 "Todos los campos: NOMBRE | APELLIDO | EDAD | EMAIL | PASSWORD son obligatorios",
             });
           }
+          if (isNaN(age) || Number(age) <= 0) {
+            return done(null, false, {
+              message: "La edad debe ser un número válido mayor a 0",
+            });
+          }
           if (!password || password.length < 6) {
             return done(null, false, {
               message: "La contraseña debe tener al menos 6 caracteres",

@@ -109,6 +109,15 @@ export const removeProductFromCart = async (req, res) => {
         .json({ error: `No se encontró carrito con ID ${cid}` });
     }
 
+    const exists = cart.products.some(
+      (p) => p.product.toString() === pid
+    );
+    if (!exists) {
+      return res
+        .status(404)
+        .json({ error: `El producto con ID ${pid} no está en el carrito` });
+    }
+    
     const updatedCart = await cartsService.removeProductFromCart(cid, pid);
 
     return res.status(200).json({
@@ -268,7 +277,7 @@ export const clearCart = async (req, res) => {
 export const purchaseCart = async (req, res) => {
   const { cid } = req.params;
   const userEmail = req.user.email;
-
+  
   if (!isValidObjectId(cid)) {
     return res
       .status(400)
@@ -305,17 +314,16 @@ if (!cart.products || cart.products.length === 0) {
         $inc: { stock: -item.quantity }
       });
     }
+    await cartsService.clearCart(cid);
+
     // Crear un ticket de compra
-    if (!userEmail) {
-      return res.status(400).json({ error: "El usuario no está autenticado" });
-    }
     const ticket = await Ticket.create({
       ticketId: Date.now().toString(),
       amount: total,
       purchaser: userEmail,
       date: new Date()
     });
-    await cartsService.clearCart(cid);
+    
     return res.status(200).json({
       message: "Compra realizada exitosamente",
       ticket: {
